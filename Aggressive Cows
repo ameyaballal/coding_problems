@@ -1,0 +1,39 @@
+https://www.codingninjas.com/codestudio/problems/aggressive-cows_1082559
+
+bool util(vector<int> &vec, int ncow, int dis){
+    ncow--;
+    int i=1;
+    int last = vec[0];
+    while(i<vec.size()){
+        if(vec[i]-last >= dis){
+            ncow--;
+            last = vec[i];
+        }
+        if(ncow==0){
+            return true;
+        }
+        i++;
+    }
+    return false;
+}
+int aggressiveCows(vector<int> &stalls, int k)
+{
+    //    Write your code here.
+    int ans = -1;
+    int n = stalls.size();
+    int l = 0;
+    int r = *max_element(stalls.begin(), stalls.end()) - *min_element(stalls.begin(), stalls.end());
+    sort(stalls.begin(),stalls.end());
+    while(l<=r){
+        int mid = (r-l)/2 + l;
+        bool flag = util(stalls,k,mid);
+        if(flag){
+            ans = mid;
+            l = mid+1;
+        }
+        else{
+            r = mid-1;
+        }
+    }
+    return ans;
+}
