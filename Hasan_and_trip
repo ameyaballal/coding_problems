@@ -1,0 +1,70 @@
+/*https://www.hackerearth.com/practice/algorithms/dynamic-programming/introduction-to-dynamic-programming-1/practice-problems/algorithm/hasan-and-trip-1/ */
+
+#include <bits/stdc++.h>
+using namespace std;
+
+double dp[3002][3002];   // can be solved by 1D dp too by storing values in dp[prev]. Storing in dp[s] will give incorrect answer
+double dist(int x1, int y1, int x2, int y2)
+{
+    double t1 = abs(x2 - x1);
+    double t2 = abs(y2 - y1);
+
+    double val = t1 * t1 + t2 * t2;
+
+    double p = sqrt(val);
+
+    return p;
+}
+
+double solve(vector<vector<int>> &arr, int n, int s, int prev)
+{
+    if (s == n - 1)
+    {
+        double dis;
+        dis = dist(arr[prev][0], arr[prev][1], arr[s][0], arr[s][1]);
+        return arr[s][2] - dis;
+    }
+
+    if (dp[s][prev] != -1000000000.0)
+        return dp[s][prev];
+
+    double dis;
+    double k1 = solve(arr, n, s + 1, prev);
+    dis = dist(arr[s][0], arr[s][1], arr[prev][0], arr[prev][1]);
+
+    double k2 = solve(arr, n, s + 1, s) + arr[s][2] - dis;
+
+    double k;
+    k = max(k1, k2);
+
+    return dp[s][prev] = k;
+}
+
+int main()
+{
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        int n;
+        cin >> n;
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+                dp[i][j] = -1000000000.0;
+        }
+
+        vector<vector<int>> arr;
+        for (int i = 0; i < n; i++)
+        {
+            int x, y, f;
+            cin >> x >> y >> f;
+            vector<int> temp = {x, y, f};
+            arr.push_back(temp);
+        }
+
+        double ans = solve(arr, n, 1, 0) + arr[0][2];
+
+        printf("%0.6lf\n", ans); // important else wrong answer
+    }
+}
